@@ -1,0 +1,1 @@
+Analizar Script: *xitfjhubcli_load_COLECTIVOS.sh* para averiguar porque nos llega un ALTA y después nos quedamos sin el movimiento de ALTA.

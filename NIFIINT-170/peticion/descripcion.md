@@ -1,0 +1,1 @@
+Se van a modificar los parámetros del Shell por CRITICO a INCIDENCIA. Se va a pedir a PLANI que también modifiquen el nombre de los parámetros en PLATON.

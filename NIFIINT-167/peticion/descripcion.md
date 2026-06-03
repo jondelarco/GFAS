@@ -1,0 +1,1 @@
+Igualar los circuitos de ambos entornos de nifi
