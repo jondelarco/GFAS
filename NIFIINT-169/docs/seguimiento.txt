@@ -1,0 +1,20 @@
+xitfj_adminconsum_nifi.sh
+	SLX00012290.eroski.es - OK
+	SLX00012296.eroski.es - OK
+	SLX00012340.eroski.es - ESPERAR TITAN JQ
+	SLX00011234.eroski.es - NULL
+xitfj_admincont_nifi.sh
+	SLX00012290.eroski.es - OK
+	SLX00012296.eroski.es - OK
+	SLX00012340.eroski.es - ESPERAR TITAN JQ
+	SLX00011234.eroski.es - NULL
+xitfjctrlstopped.sh
+	SLX00012290.eroski.es - OK
+	SLX00012296.eroski.es - OK
+	SLX00012340.eroski.es - ESPERAR TITAN JQ
+	SLX00011234.eroski.es - NULL
+xitfjadmingruponifi.sh
+	SLX00012290.eroski.es - OK
+	SLX00012296.eroski.es - OK
+	SLX00012340.eroski.es - ESPERAR TITAN JQ
+	SLX00011234.eroski.es - NULL

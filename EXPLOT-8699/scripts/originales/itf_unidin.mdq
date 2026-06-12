@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MDQ>
+	<VERSION>008</VERSION>
+	<DATABASE name="UNIDIN">
+		<TYPE>ORACLE</TYPE>
+		<PLATFORM>WINDOWS</PLATFORM>
+		<QUALIFIEDNAMES>false</QUALIFIEDNAMES>
+		<SURROUNDCHARS></SURROUNDCHARS>
+		<DESIGNSOURCE>UNIDIN.WORLD</DESIGNSOURCE>
+		<EXECUTIONSOURCE>UNIDIN.WORLD</EXECUTIONSOURCE>
+		<USER>itfcoladm</USER>
+		<PASSWORD.encrypted>$B&apos; &amp;z#|}.)</PASSWORD.encrypted>
+		<QUERY name="P_OBTENER_203_1606">
+			<SQLStmt>call UNIDINADM.PK_ITF_203_1606.P_OBTENER_203_1606(#MSGID#,?,?,?)</SQLStmt>
+		</QUERY>
+		<QUERY name="P_OBT_203_1633">
+			<SQLStmt>call ITFCOLADM.PK_ITF_203_1633.P_OBT_203_1633(#MSGID#,#NEGOCIO#,?,?,?)</SQLStmt>
+		</QUERY>
+		<QUERY name="P_OBT_COM_OUTBOX">
+			<SQLStmt>SELECT   o.SECUENCIA,
+         o.COD_INT,
+         o.CONTENIDO.getClobVal (),
+         o.FLG_ESTADO,
+         o.COD_ERROR,
+         o.MSG_ERROR,
+         o.FEC_EMISION,
+         o.FEC_TRATO,
+         o.MSGID,
+         o.FLG_ORDEN,
+         o.APP_ORIGEN,
+         o.USUARIO,
+         o.PROCESO,
+         o.ZIP_CONTENIDO,
+         cod_aplicacion_B cod_aplicacion       
+  FROM   com_outbox o,
+         (SELECT   secuencia secuencia_B,
+                   TO_NUMBER(EXTRACT (
+                                destinos,
+                                '/DESTINOS/DESTINO/APLICACIONES/COD_APLICACION/text()',
+                                'xmlns="http://xml.eroski.es/CEBI/schema/CEBI_DESTINOSV1.0"'
+                             ).getstringval ())
+                      AS cod_aplicacion_B
+            FROM   com_outbox) s_y_c,
+         com_int_apl_dest ciad
+ WHERE       o.secuencia = secuencia_B
+         AND o.flg_estado = 'P'
+         AND ciad.cod_int = o.cod_int
+         AND ciad.cod_destino = 2
+         AND ciad.cod_aplicacion = cod_aplicacion_B
+         AND cod_aplicacion = #APLICACION#
+         AND o.cod_int = #COD_INT#
+order by secuencia asc</SQLStmt>
+		</QUERY>
+		<QUERY name="QUERY_MONTAJES">
+			<SQLStmt>SELECT TO_CHAR (SYSDATE, 'YYYYMMDD'), cod_centro,cod_art,TO_CHAR (fecha_inicio, 'YYYYMMDD'),TO_CHAR (fecha_fin, 'YYYYMMDD'),cantidad FROM MISUMIADM.T_MIS_MONTAJES_VEGALSA WHERE fecha_fin &gt;= SYSDATE
+</SQLStmt>
+		</QUERY>
+		<QUERY name="QUERY_DETALLADO">
+			<SQLStmt>SELECT TO_CHAR(T.FECHA_PEDIDO,'YYYYMMDD'), T.COD_CENTRO,T.COD_ART,T.CANTIDAD
+FROM t_mis_detallado_vegalsa_modif T
+WHERE FECHA_PEDIDO = TRUNC(SYSDATE)
+AND HORA_LIMITE &lt;  #HORA#
+AND FLG_ENVIADO_VEGALSA='N'
+AND CANTIDAD &lt;&gt; CANTIDAD_PROPUESTA</SQLStmt>
+		</QUERY>
+		<TABLE name="ALBARAN_CONFIRMADO">
+			<TYPETREE>
+				<TREE>C:\\subversion\\esai\\desarrollo\\PBL\\fuente\\mercator\\mtt\\S_alb_confirmado.mtt</TREE>
+				<DATE>Thu Jun 03 11:41:24 2010</DATE>
+			</TYPETREE>
+		</TABLE>
+		<TABLE name="MISUMIADM.T_MIS_DETALLADO_VEGALSA">
+			<KEYS>W2,W1,W8</KEYS>
+		</TABLE>
+		<TABLE name="MISUMIADM.T_MIS_MAPAS_VEGALSA">
+			<KEYS>W1,W3</KEYS>
+		</TABLE>
+		<TABLE name="MISUMIADM.T_MIS_CALENDARIO_MAPA_VEGALSA">
+			<KEYS>W1,W2,W6,W9</KEYS>
+		</TABLE>
+		<TABLE name="MISUMIADM.T_MIS_MCG_CAPRABO">
+			<KEYS>W1,W2</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.PILADAS_PLANOGRAMADAS">
+			<KEYS>W5,W6,W12,W13,W19,W7</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.ENCARGOS_CENTRALIZADOS">
+			<KEYS>W5,W6,W8,W15</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.CENTROS_PLATAFORMAS">
+			<KEYS>W6,W35</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.AGRU_COMER_REF">
+			<KEYS>W6,W7,W8,W9,W10,W11,W13</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.UMBRAL">
+			<KEYS>W6,W8,W10</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.SURTIDO_TIENDA">
+			<KEYS>W6,W7,W28,W33</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.PLANOGRAMA">
+			<KEYS>W6,W7,W11,W12</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.OFERTA">
+			<KEYS>W6,W8,W9,W14,W22,W23,W24,W25,W26,W27</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.MOVIMIENTO_STOCK">
+			<KEYS>W6,W7,W17</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.DATOS_DIARIO_ART">
+			<KEYS>W6,W8,W34,S1,S2,S4,S5,S7,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24,S25,S26,S27,S28,S29,S30,S31,S32,S33,S35,S36</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.ALBARAN_CONFIRMADO">
+			<KEYS>W6,W7,W8,W9,W13,W18</KEYS>
+		</TABLE>
+		<TABLE name="COM_OUTBOX">
+			<KEYS>W1,S5</KEYS>
+			<TYPETREE>
+				<TREE>C:\\Documents and Settings\\S8991\\Mis documentos\\itf_unidin.mtt</TREE>
+				<DATE>Wed Oct 26 08:37:48 2011</DATE>
+			</TYPETREE>
+		</TABLE>
+		<TABLE name="MOVIMIENTO_STOCK">
+			<KEYS>W6,W7,W17</KEYS>
+			<TYPETREE>
+				<TREE>C:\\subversion\\esai\\desarrollo\\PBL\\fuente\\mercator\\mtt\\E_Movimientos_Stock.mtt</TREE>
+				<DATE>Mon May 31 17:34:36 2010</DATE>
+			</TYPETREE>
+		</TABLE>
+		<TABLE name="UNIDINADM.CONTROL_DETALLADO">
+			<KEYS>W6,W5,W15</KEYS>
+			<TYPETREE>
+				<TREE>C:\\kk\\pbl\\itf_unidin_p.mtt</TREE>
+				<DATE>Wed Mar 26 12:47:15 2014</DATE>
+			</TYPETREE>
+		</TABLE>
+		<TABLE name="UNIDINADM.FESTIVO_CENTRO">
+			<KEYS>W6,W7,W10,S2,S3,S4,S5,S8,S9</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.FESTIVO_PLATAFORMA">
+			<KEYS>W6,W7,W10,S2,S3,S4,S5,S8,S9,S11,S12</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.MAPA_APROV">
+			<KEYS>W6,W7,W19,W20,W21,W22</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.MAPA_APROV_FESTIVO">
+			<KEYS>W6,W7,W8,W9,W10,W12,W17</KEYS>
+		</TABLE>
+		<TABLE name="UNIDINADM.T_HZT_TMP_OFERTA">
+			<KEYS>W6,W8,W9,W14,W27,W26,W25,W24,W23,W22</KEYS>
+		</TABLE>
+		<TABLE name="ITFCOLADM.ITF_ART_LOC_TRA">
+			<KEYS>W1,W2</KEYS>
+		</TABLE>
+		<TABLE name="MISUMIADM.T_MIS_RESUMEN_DETALLADO">
+			<KEYS>W3,W5,W4</KEYS>
+			<TYPETREE>
+				<TREE>C:\\Users\\yeray.sanmartin\\Desktop\\mdq\\2022-11-24\\pro\\itf_unidin.mtt</TREE>
+				<DATE>Thu Nov 24 11:03:42 2022</DATE>
+			</TYPETREE>
+		</TABLE>
+		<PROCEDURE name="UNIDINADM.PK_ITF_MOVIMIENTO_STOCK.P_INSERTAR_MOVIMIENTO_STOCK">
+			<TYPETREE>
+				<TREE>C:\\subversion\\esai\\desarrollo\\PBL\\fuente\\mercator\\mtt\\S_Movimientos_Stock_procedure.mtt</TREE>
+				<DATE>Wed Jun 02 14:59:23 2010</DATE>
+			</TYPETREE>
+		</PROCEDURE>
+		<PROCEDURE name="UNIDINADM.PK_ITF_1602_203.P_INSERTAR_1602_203">
+			<TYPETREE>
+				<TREE>C:\\subversion\\esai\\desarrollo\\PBL\\fuente\\mercator\\mtt\\S_Albaran_Confirmado_1602_2.mtt</TREE>
+				<DATE>Mon Jun 07 11:44:25 2010</DATE>
+			</TYPETREE>
+		</PROCEDURE>
+	</DATABASE>
+</MDQ>

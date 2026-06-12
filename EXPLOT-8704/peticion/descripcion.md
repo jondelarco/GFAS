@@ -1,0 +1,3 @@
+Necesitamos desdoblar todos los interfaces (webhooks) que actualmente nos están llegando de la aplicación de última milla de BRINGG para integrarlos en la base de datos de Transporte (TRANSP) y que nos comenzaran a llegar con el mismo formato desde TOOKANE, lo único que cambia es el origen de la información.
+
+Para diferenciar los datos que nos llegan de una aplicación y de otra, se va a crear un nuevo campo llamado *id_app_reparto* que en el caso de los datos que integren de TOOKANE se debe alimentar con un 2.

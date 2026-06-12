@@ -1,0 +1,1 @@
+Hemos planteado eliminar el primer parametro de los script de nifi e intentar recuperar dentro el nombre de la maquina donde se esta lanzando el sh y con ello hacer la llamada a la API
