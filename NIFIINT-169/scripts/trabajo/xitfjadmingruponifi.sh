@@ -109,7 +109,7 @@ if [ ${ACCION} -ne 1 ];then
 		fi
 
 		#Parada de los consumidores del grupo Nifi
-		/home/itf/fuente/scripts/xitfj_adminconsum_nifi.sh $ID_HOST $ID_GROUP $ACCION
+		/home/itf/fuente/scripts/xitfj_adminconsum_nifi.sh $ID_GROUP $ACCION
 		#Ponemos un sleep para dar tiempo a tratar los flowfiles que esten ecolados
 		#sleep 900
 		sleep 10

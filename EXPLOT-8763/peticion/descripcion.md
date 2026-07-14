@@ -1,0 +1,1 @@
+Eliminar dblink de SISLOG50 en PIN8 y eliminar proceso Platon

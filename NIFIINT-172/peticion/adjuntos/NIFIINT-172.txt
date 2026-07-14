@@ -1,0 +1,1 @@
+Se ha realizado los cambios de la petición para insertar en 1 el campo id_app_reparto en Bringg. Se han realizado también las pruebas oportunas.

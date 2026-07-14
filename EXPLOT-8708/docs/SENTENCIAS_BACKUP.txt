@@ -1,0 +1,85 @@
+BRINGG NUEVA SENTENCIA:
+
+INSERT INTO STRANSP.T_TRNS_PEDIDOS_TPTE(
+      BRINGG_ID,
+      EROSKI_ID,
+      BRINGG_ID_R,
+      EXTERNAL_TEAM_ID,
+      COD_TIENDA,
+      TAG_ID,
+      PEDIDO_RECUPERADO,
+      FIN_FRANJA_ENTREGA,
+      SMS_TRACKING,
+      SMS_ENCUESTA,
+      CLIENTE_TFNO,
+      CLIENTE_IDIOMA,
+      SENT_DATE_TO_BRINGG,
+      SENT_DATE_TPTE,
+      CREATED_DATE,
+      WH_RECIBIDO,
+      es_autodisp,
+	  id_app_reparto,
+	  es_pool
+)
+SELECT
+      ${bringg_id},
+      E'${eroski_id}',
+      ${bringg_id_r:isEmpty():ifElse(0, ${bringg_id_r})},
+      E'${external_team_id}',
+      ${cod_tienda},
+      ${tag_id},
+      'N',
+      to_timestamp('${fin_franja_entrega}', 'YYYY-MM-DD"T"HH24:MI:SS'),
+      E'${sms_tracking}',
+      E'${sms_encuesta}',
+      ${cliente_tfno:isEmpty():ifElse("' '", "E'${cliente_tfno}'")},
+      ${cliente_idioma:isEmpty():ifElse("'es'", "E'${cliente_idioma}'")},
+      to_timestamp('${sent_date_to_bringg}', 'YYYY-MM-DD"T"HH24:MI:SS'),
+      to_timestamp('${sent_date_tpte}', 'YYYY-MM-DD"T"HH24:MI:SS'),
+      now(),
+      'N',
+      COALESCE((SELECT es_autodisp FROM stransp.t_trns_centros WHERE cod_centro =${cod_tienda}),'N'),
+	  ${id_app_reparto},
+      (SELECT eq.es_pool
+         FROM STRANSP.T_TRNS_EQUIPOS eq
+        WHERE eq.id_equipo_eroski = E'${external_team_id}')
+ON CONFLICT (BRINGG_ID, ID_APP_REPARTO) DO NOTHING;
+
+BACKUP SENTENCIA TOOKANE:
+
+INSERT INTO STRANSP.T_TRNS_PEDIDOS_TPTE(
+      BRINGG_ID
+    , EROSKI_ID
+    , BRINGG_ID_R
+    , EXTERNAL_TEAM_ID
+    , COD_TIENDA
+    , TAG_ID
+    , PEDIDO_RECUPERADO
+    , FIN_FRANJA_ENTREGA
+    , SMS_TRACKING
+    , SMS_ENCUESTA
+    , CLIENTE_TFNO
+    , CLIENTE_IDIOMA
+    , SENT_DATE_TO_BRINGG
+    , SENT_DATE_TPTE
+    , CREATED_DATE
+	, ID_APP_REPARTO
+)VALUES(
+      ${bringg_id}
+    , E'${eroski_id}'
+    , ${bringg_id_r:isEmpty():ifElse(0, ${bringg_id_r} )}
+    , E'${external_team_id}'
+    , ${cod_tienda}
+    , ${tag_id}
+    , 'N'
+    , to_timestamp('${fin_franja_entrega}', 'YYYY-MM-DD"T"HH24:MI:SS')
+    , E'${sms_tracking}'
+    , E'${sms_encuesta}'
+    , ${cliente_tfno:isEmpty():ifElse("' '", "E'${cliente_tfno}'" )}
+    , ${cliente_idioma:isEmpty():ifElse("'es'", "E'${cliente_idioma}'" )}
+    , to_timestamp('${sent_date_to_bringg}', 'YYYY-MM-DD"T"HH24:MI:SS')
+    , to_timestamp('${sent_date_tpte}', 'YYYY-MM-DD"T"HH24:MI:SS')
+    , now()
+	, 2
+)
+ON CONFLICT (BRINGG_ID,ID_APP_REPARTO) DO NOTHING;

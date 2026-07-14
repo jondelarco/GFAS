@@ -1,0 +1,1 @@
+Se debe modificar esta extracción y carga del proceso xitfjent_pil_P_U.sh. -Como indicamos en el documento, todavía tenemos pendiente aclarar la cuestión del campo ORIGEN pero necesitamos la estimación.-
