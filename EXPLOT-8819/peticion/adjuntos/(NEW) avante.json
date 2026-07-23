@@ -1,0 +1,321 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"idEscenario": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999999999,
+			"description": "Codigo escenario Avante"
+		},
+		"nombreEscenario": {
+			"type": "string",
+			"maxLength": 200,
+			"description": "Nombre del escenario Avante"
+		},
+		"tipoMovimiento": {
+			"type": "string",
+			"enum": [
+				"VG",
+				"MCG"
+			],
+			"description": "Tipo de Movimiento (VG/MCG)"
+		},
+		"codN1": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999,
+			"description": "Area"
+		},
+		"codN2": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999,
+			"description": "Seccion"
+		},
+		"codN3": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999,
+			"description": "Categoria"
+		},
+		"codN4": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999,
+			"description": "Subcategoria"
+		},
+		"codN5": {
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 9999,
+			"description": "Segmento"
+		},
+		"gestorEscenario": {
+			"type": "string",
+			"maxLength": 100,
+			"description": "Codigo gestor que valida el escenario"
+		},
+		"listaNegocios": {
+			"type": "array",
+			"description": "Detalle de los negocios del escenario",
+			"items": {
+				"type": "object",
+				"properties": {
+					"negociosEscenario": {
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 99999999,
+						"description": "Codigo de Negocio"
+					}
+				},
+				"required": [
+					"negociosEscenario"
+				]
+			}
+		},
+		"listaReferencias": {
+			"type": "array",
+			"description": "Referencias del escenario",
+			"items": {
+				"type": "object",
+				"properties": {
+					"codArticulo": {
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 999999999999,
+						"description": "Codigo de Referencia"
+					},
+					"accion": {
+						"type": "string",
+						"maxLength": 20,
+						"description": "Accion del movimiento (Alta/Desbloqueo/Baja/..)"
+					},
+					"tipoAlta": {
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 99,
+						"description": "Tipo de Alta"
+					},
+					"prioridad": {
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 999999,
+						"description": "Prioridad de Alta"
+					},
+					"nivelRevision": {
+						"type": "string",
+						"maxLength": 200,
+						"description": "Nivel de revision en caso de que sea Renovacion de Surtido"
+					},
+					"codArticuloEspejo": {
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 999999999999,
+						"description": "Referencia Espejo"
+					},
+					"porcElasticidad": {
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 99999,
+						"description": "Referencia Espejo"
+					}
+					,
+					"fecInicioBloqueo": {
+						"type": "string",
+						"pattern": "^[0-3][0-9]/([0][0-9]|[1][0-2])/[2][0][0-9]{2}$",
+						"description": "Fecha Inicio de Bloqueo Temporal"
+					},
+					"fecFinBloqueo": {
+						"type": "string",
+						"pattern": "^[0-3][0-9]/([0][0-9]|[1][0-2])/[2][0][0-9]{2}$",
+						"description": "Fecha Fin de Bloqueo Temporal"
+					},
+					"motivoBaja": {
+						"type": "integer",
+						"minimum": 0,
+						"maximum": 99,
+						"description": "Codigo del motivo de Baja"
+					},
+					"aplicaTodoProveedores": {
+						"type": "string",
+						"maxLength": 1,
+						"description": "Flag que indica que aplica a todos los proveedores de la referencia (S/N)"
+					},
+					"evitarObligAxB": {
+						"type": "string",
+						"maxLength": 1,
+						"description": "Flag que indica que la obligatoriedad de AxB no se debe llevar a cabo (S/N)"
+					},
+					"aprobadoPlanos": {
+						"type": "string",
+						"maxLength": 1,
+						"description": "Flag que indica si esta validado por planos o no (S/N)"
+					},
+					"listaCCs": {
+						"type": "array",
+						"description": "Ccs de la referencia",
+						"items": {
+							"type": "object",
+							"properties": {
+								"negocioCC": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 99999999,
+									"description": "Codigo de Negocio"
+								},
+								"codAmbito": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 99,
+									"description": "Codigo de Ambito"
+								},
+								"codPais": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 9999,
+									"description": "Codigo de Pais"
+								},
+								"codProvincia": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 9999,
+									"description": "Codigo de Provincia"
+								},
+								"codLoc": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 9999999999,
+									"description": "Codigo de Localizacion"
+								},
+								"codCodComercial": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 99,
+									"description": "Codificacion Comercial"
+								}
+							},
+							"required": [
+								"negocioCC",
+								"codAmbito",
+								"codPais",
+								"codCodComercial"
+							]
+						}
+					},
+					"listaTiposAprov": {
+						"type": "array",
+						"description": "Tipos de Aprovisionamiento de la referencia",
+						"items": {
+							"type": "object",
+							"properties": {
+								"negocioTipoAprov": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 99999999,
+									"description": "Codigo de Negocio"
+								},
+								"codTpAprov": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 99,
+									"description": "Codigo de Tipo de Aprovisionamiento"
+								}
+							},
+							"required": [
+								"negocioTipoAprov",
+								"codTpAprov"
+							]
+						}
+					},
+					"listaSustituidas": {
+						"type": "array",
+						"description": "Referencias Sustituidas de la referencia",
+						"items": {
+							"type": "object",
+							"properties": {
+								"negocioSust": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 99999999,
+									"description": "Codigo de Negocio"
+								},
+								"codArticuloSust": {
+									"type": "integer",
+									"minimum": 0,
+									"maximum": 99999999,
+									"description": "Codigo de Referencia Sustituida"
+								}
+							},
+							"required": [
+								"negocioSust",
+								"codArticuloSust"
+							]
+						}
+					},
+					"listaRevisiones": {
+						"type": "array",
+						"description": "Estructuras Comerciales / UMVs donde se aplica la renovacion de surtido",
+						"items": {
+							"type": "object",
+							"properties": {
+								"codN1": {
+								"type": "integer",
+								"minimum": 0,
+								"maximum": 9999,
+								"description": "N1 de la estructura a emparejar"
+								},
+								"codN2": {
+								"type": "integer",
+								"minimum": 0,
+								"maximum": 9999,
+								"description": "N2 de la estructura a emparejar"
+								},
+								"codN3": {
+								"type": "integer",
+								"minimum": 0,
+								"maximum": 9999,
+								"description": "N3 de la estructura a emparejar"
+								},
+								"codN4": {
+								"type": "integer",
+								"minimum": 0,
+								"maximum": 9999,
+								"description": "N4 de la estructura a emparejar"
+								},
+								"codN5": {
+								"type": "integer",
+								"minimum": 0,
+								"maximum": 9999,
+								"description": "N5 de la estructura a emparejar"
+								}
+							},
+							"required": [
+								"codN1",
+								"codN2",
+								"codN3",
+								"codN4",
+								"codN5"
+							]
+						}
+					}
+				},
+				"required": [
+					"codArticulo",
+					"accion"
+				]
+			}
+		}
+	},
+	"required": [
+		"idEscenario",
+		"nombreEscenario",
+		"tipoMovimiento",
+		"codN1",
+		"codN2",
+		"codN3",
+		"codN4",
+		"codN5",
+		"gestorEscenario"
+	]
+}
