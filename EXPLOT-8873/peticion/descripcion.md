@@ -1,0 +1,1 @@
+Todos aquellos JSON que llegue al tópico de Tookane _transporte.fact.ultimamilla.webhooks.tookane_ con la Key “OrderIsDone” o “OrderIsCancelled” lo integraremos en una nueva tabla que se llama *t_trns_devoluciones*  como un nuevo consumidor más de la información. 
