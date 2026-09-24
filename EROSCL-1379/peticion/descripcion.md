@@ -1,0 +1,3 @@
+Si podéis copiar en Desarrollo los datos de este cliente de Producción perfecto. Es el IdClienteMDM {*}5457654{*}. Nos servirá para verificar el desarrollo y con el resto de clientes verificar que no se ha “roto” nada para todos los clientes
+
+Solo nos han reportado desde el SAC problemas con este, al final solo trabajan con los que llaman y es al intentar solicitar un duplicado de la TEC por que no se cargaban correctamente todas las tarjetas y faltaba la de alta.

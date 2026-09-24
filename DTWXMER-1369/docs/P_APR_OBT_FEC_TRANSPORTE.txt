@@ -1,0 +1,189 @@
+-- Inicio Pet. 44885 GSF
+    /*-----------------------------------------------------------------------------------------
+        Procedimiento para obtener la Fecha de Transporte de un Pedido en base a:
+            - Si la plataforma origen esta arranacada en GIFES la Fecha de Transporte será la
+              Fec. Entrega Hasta,
+            - Si no es de GIFES se obtendrá de GESTION_FECHAS_INFOLOG.
+        En el caso de no existir se devolvera NULA la fecha.
+        El formato o mascara de la fecha será el siguiente 'YYYYMMDD'
+    ------------------------------------------------------------------------------------------*/
+	PROCEDURE P_APR_OBT_FEC_TRANSPORTE ( p_cod_cab_pedido	    IN  cab_pedido.cod_cab_pedido%TYPE
+	                                   , p_fec_transporte	    OUT VARCHAR2
+                                       , p_r_error              OUT pk_arq_errores.t_r_error
+                                       )
+	IS
+
+        k_func_name             CONSTANT VARCHAR2 (30) := 'P_APR_OBT_FEC_TRANSPORTE';
+
+        v_r_cab_pedido          cab_pedido%ROWTYPE;
+        v_plat_gifes			BOOLEAN;
+
+        -- Variables de Error
+        v_message_number        fnd_new_messages.message_number%TYPE;
+        v_message_text          fnd_new_messages.message_text%TYPE;
+
+        v_r_error               pk_arq_errores.t_r_error;
+        v_r_err                 pk_arq_errores.t_r_error;
+        v_r_info_log            pk_apr_log_batch.t_r_info_log;
+
+        -- Variables de Excepción
+        e_parametros_nulos      EXCEPTION;
+        e_error_pedido          EXCEPTION;
+
+    BEGIN
+
+        -- Se inicializan variables
+        p_r_error.v_cod_error       := pk_apr_constantes.k_no_error;
+        p_fec_transporte            := NULL;
+
+        v_r_info_log.v_nomb_proceso := k_func_name;
+        v_r_info_log.v_contexto     := k_const_1
+                                    || k_p_cod_pedido || p_cod_cab_pedido
+                                    || k_fin_params;
+
+        -- Se comprueba si el parametro de entrada viene informado o es nulo.
+        IF p_cod_cab_pedido IS NULL
+        THEN
+            RAISE e_parametros_nulos;
+        END IF;
+
+        -- Si tenemos un código de pedido, obtendremos los datos de la cabecera del pedido
+        pk_apr_fac_comunes.p_apr_leer_cabecera_pedido ( p_cod_cab_pedido
+                                                      , v_r_cab_pedido
+                                                      , v_r_error
+                                                      );
+
+        IF v_r_error.v_cod_error <> pk_apr_constantes.k_no_error
+		THEN
+            pk_apr_general.p_apr_obtener_datos_error ( pk_apr_constantes_2.k_aprped_err_cab_pedido
+                                                     , v_message_number
+                                                     , v_message_text
+                                                     , k_pkg_name
+                                                     , k_func_name
+                                                     , v_r_err
+                                                     );
+
+            RAISE e_error_pedido;
+        END IF;
+
+        -- Inicializamos variable
+        v_plat_gifes := FALSE;
+
+        v_plat_gifes := pk_apr_general_gifes.f_apr_tratamiento_gifes ( v_r_cab_pedido.cod_loc
+                                                                     , v_r_cab_pedido.cod_loc_provr
+                                                                     , v_r_cab_pedido.cod_tp_aprov
+                                                                     , v_r_cab_pedido.fec_pedido
+                                                                     , v_r_error
+                                                                     );
+        -- Si la plataforma origen es de GIFES
+        IF v_plat_gifes
+        THEN
+
+            -- La Fecha de Preparación será la Fec. Entrega Desde de CAB_PEDIDO
+            IF v_r_cab_pedido.fec_entrega_hasta IS NOT NULL
+            THEN
+                 p_fec_transporte := TO_CHAR(v_r_cab_pedido.fec_entrega_hasta, 'YYYYMMDD');
+            ELSE
+                 p_fec_transporte := NULL;
+            END IF;
+
+       -- Si no es de GIFES
+        ELSE
+
+            -- Obtenemos la fecha de GESTION_FECHAS_INFOLOG
+            BEGIN
+
+                SELECT TO_CHAR ( CASE
+                                    WHEN B.FEC_ENTREGA < B.FEC_SERVICIO
+                                    THEN
+                                         C.FEC_ENTREGA_DESDE - (7 + B.FEC_ENTREGA - B.FEC_SERVICIO)
+                                    ELSE
+                                         C.FEC_ENTREGA_DESDE - (B.FEC_ENTREGA - B.FEC_SERVICIO)
+                                    END, 'YYYYMMDD'
+                               )  FECHA_ENTREGA
+                  INTO p_fec_transporte
+                  FROM CAB_PEDIDO C
+                     , GESTION_FECHAS_INFOLOG B
+                 WHERE C.COD_LOC_PROVR   =  B.COD_LOC_ORI
+                   AND C.COD_LOC         =  B.COD_LOC_DEST
+                   AND TO_NUMBER(TO_CHAR(C.FEC_ENTREGA_DESDE,'D')) = B.FEC_ENTREGA
+                   AND C.COD_CAB_PEDIDO  = p_cod_cab_pedido
+                   AND ROWNUM < 2;
+
+            EXCEPTION
+
+                  WHEN NO_DATA_FOUND THEN
+                            p_fec_transporte := NULL;
+
+            END;
+
+        END IF;
+
+
+    EXCEPTION
+
+        -- Si no se han recibido los parámetros
+        WHEN e_parametros_nulos THEN
+
+                p_r_error.v_cod_error       := pk_apr_constantes.k_param_nulos;
+                p_r_error.v_message_name    := pk_apr_constantes.k_apr_parametros_nulos;
+                p_r_error.v_msg_error       := pk_apr_constantes.k_en_proceso
+                                            || k_pkg_name
+                                            || pk_apr_constantes.k_separador_msg_error_func
+                                            || k_func_name;
+
+                --parámetros para el fichero de diario
+                v_r_info_log.v_texto        := p_r_error.v_cod_error
+                                            || k_cad_separacion
+                                            || p_r_error.v_message_name
+                                            || k_cad_separacion
+                                            || p_r_error.v_msg_error;
+
+                pk_apr_log_batch.p_apr_escribe_msg_fichero_log ( v_r_info_log, v_r_error);
+
+
+        -- Erro al leer el código de pedido
+        WHEN e_error_pedido THEN
+
+                p_r_error.v_cod_error       := v_r_error.v_cod_error;
+                p_r_error.v_message_name    := v_r_error.v_message_name;
+                p_r_error.v_msg_error       := pk_apr_constantes.k_en_proceso
+                                            || v_message_text;
+
+                --parámetros para el fichero de diario
+                v_r_info_log.v_texto        := p_r_error.v_cod_error
+                                            || k_cad_separacion
+                                            || p_r_error.v_message_name
+                                            || k_cad_separacion
+                                            || p_r_error.v_msg_error;
+
+                pk_apr_log_batch.p_apr_escribe_msg_fichero_log ( v_r_info_log, v_r_error);
+
+
+        -- Otro tipo de error
+        WHEN OTHERS THEN
+
+                p_r_error.v_cod_error       := pk_apr_constantes.k_error_oracle;
+                p_r_error.v_message_name    := pk_apr_constantes.k_apr_error_sistema;
+                p_r_error.v_msg_error       := SQLERRM || '-' || dbms_utility.format_error_backtrace|| '-'
+                                            || k_cad_separacion                     -- SIA-438. DG
+                                            || dbms_utility.format_error_backtrace  -- SIA-438. DG
+                                            || pk_apr_constantes.k_en_proceso
+                                            || k_pkg_name
+                                            || pk_apr_constantes.k_separador_msg_error_func
+                                            || k_func_name;
+
+                --parámetros para el fichero log
+                v_r_info_log.v_tipo_msg     := pk_apr_constantes_2.k_apr_tipo_msg_err;
+                v_r_info_log.v_texto        := p_r_error.v_cod_error
+                                            || k_cad_separacion
+                                            || p_r_error.v_message_name
+                                            || k_cad_separacion
+                                            || p_r_error.v_msg_error;
+
+                pk_apr_log_batch.p_apr_escribe_msg_fichero_log (v_r_info_log, v_r_error);
+
+
+
+    END;
+    -- Fin Pet. 44885 GSF
